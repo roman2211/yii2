@@ -4,6 +4,10 @@ namespace app\models\tables;
 
 use Yii;
 
+use yii\db\ActiveRecord;
+use yii\behaviors\TimestampBehavior;
+
+
 /**
  * This is the model class for table "tasks".
  *
@@ -18,6 +22,8 @@ use Yii;
  */
 class Tasks extends \yii\db\ActiveRecord
 {
+     
+    
     /**
      * {@inheritdoc}
      */
@@ -56,6 +62,16 @@ class Tasks extends \yii\db\ActiveRecord
         ];
     }
 
+    public function behaviors()
+     {
+         return [
+             [
+                 'class' => TimestampBehavior::className(),
+                 'value' => time(),
+             ],
+        ];
+     }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -63,4 +79,5 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Users::className(), ['id' => 'responsible_id']);
     }
+
 }
