@@ -1,7 +1,7 @@
 <?php
 
 namespace app\models;
-
+use yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\tables\Tasks;
@@ -11,15 +11,34 @@ use app\models\tables\Tasks;
  */
 class TasksSearch extends Tasks
 {
+
+    public $created;
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
+
+        
         return [
             [['id', 'responsible_id', 'status_id'], 'integer'],
-            [['name', 'description', 'date'], 'safe'],
+            [['name', 'description', 'date', 'updated_at'], 'safe'],
+            [['created'],'safe'],
+
         ];
+    }
+
+    public function prepareDataQuery($query) {
+       
+          if ((!empty($this->created)) && ($this->created[0] !== 'null')) {
+              $query=$query->cache(720); //кэширование запросов фильтрации данных по месяцам
+        foreach ($this->created as $monthnumber) {    
+            $query->orFilterWhere(["MONTH(FROM_UNIXTIME(`created_at`))" => $monthnumber]);
+        }
+       
+    }
+ 
+    return $query;
     }
 
     /**
@@ -40,7 +59,8 @@ class TasksSearch extends Tasks
      */
     public function search($params)
     {
-        $query = Tasks::find();
+
+         $query = Tasks::find();
 
         // add conditions that should always apply here
 
@@ -63,12 +83,14 @@ class TasksSearch extends Tasks
             'date' => $this->date,
             'status_id' => $this->status_id,
         ]);
+        
+    
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'description', $this->description]);
-        
-        
-       
+    
+        $this->prepareDataQuery($query);
+              
 
         return $dataProvider;
     }

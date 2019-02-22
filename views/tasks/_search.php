@@ -3,9 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\TasksSearch */
-/* @var $form yii\widgets\ActiveForm */
+
 ?>
 
 <div class="tasks-search">
@@ -13,19 +11,28 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
+         'enableClientValidation'=>'false'
+
+
     ]); ?>
 
-    <?= $form->field($model, 'id') ?>
+    <?= $form->field($model, 'created')->dropDownList([
+        'null' => 'все',
+        '1' => 'январь',
+        '2' => 'февраль',
+        '3' => 'март',
+        '4' => 'апрель',
+        '5' => 'май',
+        '6' => 'июнь',
+        '7' => 'июль',
+        '8' => 'август',
+        '9' => 'сентябрь',
+        '10' => 'октябрь',
+        '11' => 'ноябрь',
+        '12' => 'декабрь',
+    ],
+    ['multiple' => 'true'])?>
 
-    <?= $form->field($model, 'name') ?>
-
-    <?= $form->field($model, 'description') ?>
-
-    <?= $form->field($model, 'responsible_id') ?>
-
-    <?= $form->field($model, 'date') ?>
-
-    <?php // echo $form->field($model, 'status_id') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

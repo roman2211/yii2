@@ -1,5 +1,8 @@
 <?php
 
+
+echo $this->render('_search', ['model' => $searchModel]); 
+
 echo yii\widgets\ListView::widget([
     'dataProvider' => $dataProvider,
     'itemView' => function($model) {

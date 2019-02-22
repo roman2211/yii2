@@ -44,6 +44,7 @@ class Tasks extends \yii\db\ActiveRecord
             [['date'], 'safe'],
             [['name'], 'string', 'max' => 255],
             [['responsible_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['responsible_id' => 'id']],
+            [['created_at', 'updated_at'], 'date'],
         ];
     }
 
@@ -54,10 +55,10 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'description' => 'Description',
-            'responsible_id' => 'Responsible ID',
-            'date' => 'Date',
+            'name' => 'Name of task',
+            'description' => 'Task description',
+            'responsible_id' => 'Responsible',
+            'date' => 'Deadline',
             'status_id' => 'Status ID',
         ];
     }
