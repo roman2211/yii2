@@ -15,6 +15,10 @@ use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use app\models\TasksSearch;
+use app\controllers\UploadController;
+use app\models\Upload;
+use yii\web\UploadedFile;
+use app\models\tables\Comments;
 
 
 
@@ -89,6 +93,8 @@ class TasksController extends Controller
             return $this->redirect(['view', 'id' => $model->id, 'user' => $user]);
         }
 
+     
+
         return $this->render('create', [
             'model' => $model, 'array' => $newArray,
         ]);
@@ -104,18 +110,49 @@ class TasksController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $imageModel = new Upload();
+    
 
         $array = Users::find()->select(['id', 'username'])->all();
         $newArray = ArrayHelper::map($array, 'id', 'username');
+/* 
+        var_dump($model->load(Yii::$app->request->post())); exit; */
+
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $user = Users::find()->select(['username'])->where(['id' => $model->responsible_id])->one()->username;
             return $this->redirect(['view', 'id' => $model->id, 'user' => $user]);
         }
 
+    
+        if (Yii::$app->request->isPost) {
+            if ($imageModel->file = UploadedFile::getInstance($imageModel, 'file')) {
+                $imageModel->run();
+                \Yii::$app->session->setFlash('success', "Файл добавлен");
+            }
+          
+      
+          }
+      
         return $this->render('update', [
-            'model' => $model, 'array' => $newArray,
+            'model' => $model, 
+            'array' => $newArray, 
+            'imageModel'=>$imageModel, 
+            'taskCommentForm' => new Comments,
+            'userId' => \Yii::$app->user->id,
         ]);
+    }
+
+    public function actionAddComment() 
+    {
+     
+        $model = new Comments();
+        if($model->load(\Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('success', "Комментарий добавлен");
+        } else {
+            \Yii::$app->session->setFlash('error', "Не удалось добавить комментарий");
+        }
+        $this->redirect(\Yii::$app->request->referrer);
     }
 
     public function actionCardUpdate($id)

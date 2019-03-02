@@ -4,16 +4,38 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
+    'language' => 'ru',
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log', 'eventController'],
+   /*  'i18n' => [
+        'translations' => [
+            'app' => [
+                'class' => 'yii\i18n\PhpMessageSource:class',
+                'basePath' => '@app\messages',
+            ]
+        ]
+    ], */
+    'bootstrap' => ['log', 'eventController', 'bootstrap'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@img' => '@app/web/img',
     ],
     'components' => [
+        'bootstrap' => [
+            'class' => 'app\components\Bootstrap',
+        ],
+
+        'i18n' => [
+            'translations' => [
+                'app' => [
+                    'class' => yii\i18n\PhpMessageSource::class,
+                    'basePath' => "@app/messages"
+                ]
+            ]
+        ],
         'eventController' => [
-            'class' => 'app\controllers\EventController',
+            'class' => 'app\components\EventController',
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -50,15 +72,16 @@ $config = [
                 ],
             ],
         ],
-        'db' => $db,
-        /*
+        'db' => $db,        
         'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
+            'enablePrettyUrl' => true, 
+            'showScriptName' => false, 
             'rules' => [
+                'tasks' => 'tasks/index',
+                'tasks/<id>' => 'tasks/one',
+                'tasks/addcomment' => 'tasks/add-comment',
             ],
-        ],
-        */
+        ],       
     ],
     'params' => $params,
 ];
